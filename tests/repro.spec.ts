@@ -3,12 +3,12 @@ import type { Page } from '@playwright/test'
 
 const litText = 'const lit = "hello"'
 const plainText = 'const plain = "hello"'
-const markerText = 'const marker = "hello"'
+const decoyText = 'const decoy = "hello"'
 
 const initialText = {
   lit: litText,
   plain: plainText,
-  'comment-marker': markerText,
+  decoy: decoyText,
 } as const
 
 async function replaceAllContent(page: Page, renderer: keyof typeof initialText) {
@@ -65,7 +65,7 @@ test('Lit node view keeps one code block containing the typed character', async 
       },
       {
         type: 'code_block_3',
-        content: [{ type: 'text', text: markerText }],
+        content: [{ type: 'text', text: decoyText }],
       },
     ],
   })
@@ -87,14 +87,14 @@ test('plain DOM node view keeps one code block containing the typed character', 
       },
       {
         type: 'code_block_3',
-        content: [{ type: 'text', text: markerText }],
+        content: [{ type: 'text', text: decoyText }],
       },
     ],
   })
 })
 
-test('comment-marker node view keeps one code block containing the typed character', async ({ page }) => {
-  await replaceAllContent(page, 'comment-marker')
+test('decoy contentDOM node view keeps one code block containing the typed character', async ({ page }) => {
+  await replaceAllContent(page, 'decoy')
   const actual = await page.evaluate(() => window.editorView.state.doc.toJSON())
   expect(actual).toEqual({
     type: 'doc',

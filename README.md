@@ -6,12 +6,15 @@ The page compares three code blocks:
 | --- | --- | --- |
 | `code_block_1` | plain DOM | none |
 | `code_block_2` | Lit | wrapper element and Lit comment marker |
-| `code_block_3` | plain DOM | the same wrapper and comment marker, created manually |
+| `code_block_3` | plain DOM | wrapper element and a decoy `<code>` sibling |
 
 ## Reproduction steps
 
-1. Run https://issueset.github.io/prosemirror-view-lit-contentdom-repro/ in Chrome or Safari.
-2. Select all text in a code block and type `1`. Refresh between three code blocks.
+1. Open the [live demo](https://issueset.github.io/prosemirror-view-lit-contentdom-repro/)
+   in Chrome or Safari. To run locally, use `pnpm install && pnpm dev`, then
+   open `http://127.0.0.1:4173`.
+2. Select all text in one code block and type `1`. Reload the page before
+   testing another block.
 
 `code_block_1` works. `code_block_2` and `code_block_3` create an extra empty
 block in `Editor state`.
@@ -50,14 +53,14 @@ The resulting NodeView structures are:
   </lit-code-block>
 </div>
 
-<!-- code_block_3: plain DOM with the Lit-shaped marker structure -->
-<div data-node-view-root="true" data-renderer="comment-marker">
-  <comment-marker-code-block>
-    <!---->
+<!-- code_block_3: plain DOM with a decoy that resembles contentDOM -->
+<div data-node-view-root="true" data-renderer="decoy">
+  <decoy-code-block>
+    <code data-content-dom="decoy-fake"></code>
     <pre data-type="code-block-3">
-      <code data-content-dom="comment-marker">...highlighted spans...</code>
+      <code data-content-dom="decoy">...highlighted spans...</code>
     </pre>
-  </comment-marker-code-block>
+  </decoy-code-block>
 </div>
 ```
 
@@ -67,15 +70,27 @@ In Chromium and WebKit, selecting all highlighted code and typing `1` removes
 the complete `<code contentDOM>` element. The browser inserts `1` into its
 former `<pre>` parent and preserves the active color with a `<font>` element.
 
-For `code_block_2` and `code_block_3`, the important resulting structure is:
+For `code_block_2`, the important resulting structure is:
 
 ```html
-<node-view-wrapper>
+<lit-code-block>
   <font color="#cf222e">
     <!---->
     <pre>1</pre>
   </font>
-</node-view-wrapper>
+</lit-code-block>
+```
+
+`code_block_3` has no comment. The browser wraps the decoy and `<pre>`
+together:
+
+```html
+<decoy-code-block>
+  <font color="#cf222e">
+    <code data-content-dom="decoy-fake"></code>
+    <pre>1</pre>
+  </font>
+</decoy-code-block>
 ```
 
 `prosemirror-view@1.42.2` notices that `contentDOM` was removed. It tries to
@@ -104,9 +119,9 @@ The correct result is one block:
 ]
 ```
 
-`code_block_3` produces the same error with its own node type. This proves Lit
-itself is not required. The trigger is the wrapper plus sibling comment marker
-DOM shape that Lit naturally produces.
+`code_block_3` produces the same error with its own node type. This proves the
+failure is not specific to Lit or comment nodes. Another element before
+`<pre>` can trigger the same unreliable `contentElement` choice.
 
 `code_block_1` passes because it has neither of those extra nodes. Firefox
 passes all three cases because it edits the text in place instead of replacing
@@ -126,7 +141,7 @@ The expected result with the bug is `4 failed, 5 passed`:
 | --- | --- | --- | --- |
 | Plain DOM, `code_block_1` | passes | passes | passes |
 | Lit, `code_block_2` | fails | passes | fails |
-| Plain DOM with comment marker, `code_block_3` | fails | passes | fails |
+| Plain DOM with decoy `<code>`, `code_block_3` | fails | passes | fails |
 
 The four failures contain an extra empty `code_block_2` or `code_block_3`
 before the block containing `1`.

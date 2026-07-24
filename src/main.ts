@@ -80,19 +80,19 @@ function createPlainCodeBlockNodeView(): NodeView {
   return { dom, contentDOM }
 }
 
-function createCommentMarkerCodeBlockNodeView(): NodeView {
+function createDecoyContentDOMCodeBlockNodeView(): NodeView {
   const dom = document.createElement('div')
   dom.dataset.nodeViewRoot = 'true'
-  dom.dataset.renderer = 'comment-marker'
+  dom.dataset.renderer = 'decoy'
 
-  const component = document.createElement('comment-marker-code-block')
+  const component = document.createElement('decoy-code-block')
   const pre = document.createElement('pre')
   pre.dataset.type = 'code-block-3'
-  const contentDOM = createContentDOM('comment-marker')
+  const decoyContentDOM = document.createElement('code')
+  decoyContentDOM.dataset.contentDom = 'decoy-fake'
+  const contentDOM = createContentDOM('decoy')
 
-  // This is the light-DOM shape produced by Lit for the first node view:
-  // <lit-code-block><!----><pre><code /></pre></lit-code-block>
-  component.append(document.createComment(''), pre)
+  component.append(decoyContentDOM, pre)
   pre.appendChild(contentDOM)
   dom.appendChild(component)
 
@@ -130,7 +130,7 @@ function getCodeTokenStyle(token: string): string {
 const initialDoc = schema.node('doc', null, [
   schema.node('code_block_1', null, [schema.text('const plain = "hello"')]),
   schema.node('code_block_2', null, [schema.text('const lit = "hello"')]),
-  schema.node('code_block_3', null, [schema.text('const marker = "hello"')]),
+  schema.node('code_block_3', null, [schema.text('const decoy = "hello"')]),
 ])
 
 const editorElement = document.querySelector('#editor')
@@ -148,7 +148,7 @@ const view = new EditorView(editorElement, {
   nodeViews: {
     code_block_1: () => createPlainCodeBlockNodeView(),
     code_block_2: () => createLitCodeBlockNodeView(),
-    code_block_3: () => createCommentMarkerCodeBlockNodeView(),
+    code_block_3: () => createDecoyContentDOMCodeBlockNodeView(),
   },
   dispatchTransaction(transaction) {
     view.updateState(view.state.apply(transaction))
