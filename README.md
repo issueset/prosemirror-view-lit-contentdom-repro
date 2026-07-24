@@ -8,6 +8,15 @@ The page compares three code blocks:
 | `code_block_2` | Lit | wrapper element and Lit comment marker |
 | `code_block_3` | plain DOM | the same wrapper and comment marker, created manually |
 
+## Reproduction steps
+
+1. Run `pnpm install && pnpm dev`.
+2. Open `http://127.0.0.1:4173` in Chrome or Safari.
+3. Select all text in a block and type `1`. Refresh between blocks.
+
+`code_block_1` works. `code_block_2` and `code_block_3` create an extra empty
+block in `Editor state`.
+
 ## DOM before typing
 
 All blocks use the same inline syntax highlighter. It gives keywords,
@@ -122,12 +131,3 @@ The expected result with the bug is `4 failed, 5 passed`:
 
 The four failures contain an extra empty `code_block_2` or `code_block_3`
 before the block containing `1`.
-
-## Manual reproduction
-
-1. Run `pnpm install && pnpm dev`.
-2. Open `http://127.0.0.1:4173` in Chrome or Safari.
-3. Select all text in a block and type `1`. Refresh between blocks.
-
-`code_block_1` works. `code_block_2` and `code_block_3` create an extra empty
-block in `Editor state`.
