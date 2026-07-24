@@ -10,9 +10,8 @@ The page compares three code blocks:
 
 ## Reproduction steps
 
-1. Run `pnpm install && pnpm dev`.
-2. Open `http://127.0.0.1:4173` in Chrome or Safari.
-3. Select all text in a block and type `1`. Refresh between blocks.
+1. Run https://issueset.github.io/prosemirror-view-lit-contentdom-repro/ in Chrome or Safari.
+2. Select all text in a code block and type `1`. Refresh between three code blocks.
 
 `code_block_1` works. `code_block_2` and `code_block_3` create an extra empty
 block in `Editor state`.
