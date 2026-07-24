@@ -1,0 +1,22 @@
+{
+  "name": "prosemirror-view-lit-contentdom-repro",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.28.1",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 4173",
+    "build": "vite build",
+    "test": "playwright test"
+  },
+  "dependencies": {
+    "lit": "3.3.3",
+    "prosemirror-model": "1.25.11",
+    "prosemirror-state": "1.4.4",
+    "prosemirror-view": "1.42.2"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.61.0",
+    "typescript": "6.0.3",
+    "vite": "8.1.3"
+  }
+}
