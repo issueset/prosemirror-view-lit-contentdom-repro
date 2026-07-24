@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>prosemirror-view contentDOM replacement reproduction</title>
+    <script type="module" crossorigin src="/assets/index-B7LcZkpr.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-CM-RgEHh.css">
+  </head>
+  <body>
+    <main>
+      <h1>prosemirror-view contentDOM replacement reproduction</h1>
+      <p>
+        The first block uses a plain DOM node view. The second uses a Lit node
+        view. The third uses plain DOM plus Lit-shaped wrapper and comment
+        marker nodes. Select all text in a block, then type <code>1</code>.
+      </p>
+      <div id="editor"></div>
+      <h2>Editor state</h2>
+      <pre id="state"></pre>
+    </main>
+  </body>
+</html>
