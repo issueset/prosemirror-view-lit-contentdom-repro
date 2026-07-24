@@ -13,8 +13,7 @@ The page compares three code blocks:
 1. Open the [live demo](https://issueset.github.io/prosemirror-view-lit-contentdom-repro/)
    in Chrome or Safari. To run locally, use `pnpm install && pnpm dev`, then
    open `http://127.0.0.1:4173`.
-2. Select all text in one code block and type `1`. Reload the page before
-   testing another block.
+2. In each code block, select all text and type `1`.
 
 `code_block_1` works. `code_block_2` and `code_block_3` create an extra empty
 block in `Editor state`.
